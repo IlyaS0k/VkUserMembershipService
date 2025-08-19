@@ -1,0 +1,17 @@
+spring:
+  application:
+      name: "VK User Membership Service"
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=100000,expireAfterWrite=15m
+
+vk:
+  api-version: 5.199
+
+logging:
+  level:
+    org:
+      apache:
+        camel:
+          component: DEBUG
