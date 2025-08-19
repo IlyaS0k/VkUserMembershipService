@@ -10,7 +10,7 @@ public class VkResponseValidator {
     public void validate(JsonNode responseJson) {
         if (responseJson.has("error")) {
             var error = responseJson.get("error");
-            var errorMsg = error.get("error_msg").toString();
+            var errorMsg = error.get("error_msg").textValue();
             var errorCode = Integer.parseInt(error.get("error_code").toString());
             throw new VkException(errorMsg, errorCode);
         }
