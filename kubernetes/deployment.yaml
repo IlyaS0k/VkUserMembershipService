@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vk-user-membership-service
+  labels:
+    app: vk-user-membership-service
+spec:
+  revisionHistoryLimit: 12
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: vk-user-membership-service
+  template:
+    metadata:
+      labels:
+        app: vk-user-membership-service
+    spec:
+      containers:
+        - name: vk-user-membership-service
+          image: gazpromneft/vk-user-membership-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: vk-user-membership-service
+              containerPort: 8080
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "0.1"
+            limits:
+              memory: "10241Mi"
+              cpu: "0.2"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 6

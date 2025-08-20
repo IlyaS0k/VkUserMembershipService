@@ -107,7 +107,20 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <from>
+                        <image>eclipse-temurin:17-jre-alpine</image>
+                    </from>
+                    <to>
+                        <image>gazpromneft/vk-user-membership-service:latest</image>
+                    </to>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
-
 </project>
