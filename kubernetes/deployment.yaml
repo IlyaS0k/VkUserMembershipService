@@ -23,7 +23,7 @@ spec:
           image: gazpromneft/vk-user-membership-service:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - name: vk-user-membership-service
+            - name: vk-membership
               containerPort: 8080
           resources:
             requests:
