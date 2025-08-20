@@ -1,0 +1,22 @@
+vk:
+  api:
+    base-url: http://localhost:${wiremock.server.port}
+    version: 5.199
+    endpoints:
+      users-get: /method/users.get
+      groups-is-member: /method/groups.isMember
+
+wiremock:
+  server:
+    port: 0
+
+spring:
+  main:
+    web-application-type: servlet
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+
+logging.level:
+  com.github.tomakehurst.wiremock: DEBUG
+  org.springframework.cloud.contract.wiremock: DEBUG
