@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +37,11 @@ public class MembershipController {
                     content = @Content(schema = @Schema(implementation = MembershipInfoResponse.class))
             ),
             @ApiResponse(
+                    responseCode = "400",
+                    description = "Невалидный запрос",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
                     responseCode = "404",
                     description = "Пользователь не найден в VK",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class))
@@ -56,7 +62,7 @@ public class MembershipController {
                     description = "Идентификаторы пользователя и группы VK",
                     required = true
             )
-            @RequestBody MembershipInfoRequest request
+            @Valid @RequestBody MembershipInfoRequest request
     ) throws Exception {
         var result = membershipService.getVkUserMembershipInfo(request, vkServiceToken);
         if (result.isSuccess()) {

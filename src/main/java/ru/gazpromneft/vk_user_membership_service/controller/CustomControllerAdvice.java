@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.gazpromneft.vk_user_membership_service.dto.response.ErrorResponse;
@@ -11,10 +12,29 @@ import ru.gazpromneft.vk_user_membership_service.exception.VkException;
 import ru.gazpromneft.vk_user_membership_service.exception.VkUserNotFoundException;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 @Slf4j
 public class CustomControllerAdvice {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+
+        log.warn("Ошибка валидации: {}", errorMessage);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(ErrorResponse.builder()
+                        .type("ValidationException")
+                        .message(errorMessage)
+                        .timestamp(Instant.now())
+                        .build());
+    }
 
     @ExceptionHandler(VkUserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleVkUserNotFoundException(VkUserNotFoundException ex) {
