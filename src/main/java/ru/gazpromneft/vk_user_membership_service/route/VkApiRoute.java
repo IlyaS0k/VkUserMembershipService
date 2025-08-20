@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
-import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
@@ -96,15 +95,15 @@ public class VkApiRoute extends RouteBuilder {
                 .routeId("get-user-info-route")
                 .setHeader("CamelHttpMethod", constant("GET"))
                 .setBody(exchangeProperty(USER_GROUP_EXCHANGE_PROP))
-                .toD("https://api.vk.com/method/users.get?user_ids=${body.userId}&" +
-                        "fields=nickname&access_token=${header.vk_service_token}&v={{vk.api-version}}");
+                .toD("{{vk.api.base-url}}{{vk.api.endpoints.users-get}}?user_ids=${body.userId}&" +
+                        "fields=nickname&access_token=${header.vk_service_token}&v={{vk.api.version}}");
 
         from("direct:checkGroupMembership")
                 .routeId("check-group-membership-route")
                 .setHeader("CamelHttpMethod", constant("GET"))
                 .setBody(exchangeProperty(USER_GROUP_EXCHANGE_PROP))
-                .toD("https://api.vk.com/method/groups.isMember?user_id=${body.userId}&" +
-                        "group_id=${body.groupId}&access_token=${header.vk_service_token}&v={{vk.api-version}}");
+                .toD("{{vk.api.base-url}}{{vk.api.endpoints.groups-is-member}}?user_id=${body.userId}&" +
+                        "group_id=${body.groupId}&access_token=${header.vk_service_token}&v={{vk.api.version}}");
     }
 }
 

@@ -7,7 +7,12 @@ spring:
       spec: maximumSize=100000,expireAfterWrite=15m
 
 vk:
-  api-version: 5.199
+  api:
+    base-url: https://api.vk.com
+    version: 5.199
+    endpoints:
+      users-get: /method/users.get
+      groups-is-member: /method/groups.isMember
 
 logging:
   level:
