@@ -23,9 +23,7 @@ public class CustomControllerAdvice {
         String errorMessage = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
-
         log.warn("Ошибка валидации: {}", errorMessage);
-
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -48,18 +46,10 @@ public class CustomControllerAdvice {
     @ExceptionHandler(VkException.class)
     public ResponseEntity<ErrorResponse> handleVkUserNotFoundException(VkException ex) {
         log.warn("Ошибка при обращении к VK: {}", ex.getMessage());
-        var errorMessage = "Ошибка при обращении к VK API, код: " + ex.getCode() + "\n" + ex.getMessage();
-
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(
-                        ErrorResponse.builder()
-                        .type(ex.getClass().getSimpleName())
-                        .message(errorMessage)
-                        .timestamp(Instant.now())
-                        .build()
-                );
+                .body(ErrorResponse.fromException(ex));
     }
 
     @ExceptionHandler(Exception.class)
